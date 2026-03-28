@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: etl_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: etl_user
+      POSTGRES_PASSWORD: etl_pass
+      POSTGRES_DB: etl_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etl_user -d etl_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  etl_app:
+    build: .
+    container_name: etl_python_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: etl_db
+      DB_USER: etl_user
+      DB_PASSWORD: etl_pass
+      WB_BASE_URL: https://api.worldbank.org/v2
+      WB_PER_PAGE: 100
+      WB_MRV: 10
+      WB_MAX_RETRIES: 3
+    command: ["python", "src/main.py"]
+
+volumes:
+  postgres_data:
