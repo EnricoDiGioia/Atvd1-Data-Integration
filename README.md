@@ -118,10 +118,10 @@ SELECT COUNT(*) FROM countries;
 
 ### Q2 — Distribuição por grupo de renda
 ```sql
-SELECT income_group, COUNT(*)
-FROM countries
-GROUP BY income_group
-ORDER BY 2 DESC;
+    SELECT income_group, COUNT(*)
+    FROM countries
+    GROUP BY income_group
+    ORDER BY 2 DESC;
 ```
 
 ### Q3 — Volume e nulos por indicador
@@ -157,6 +157,84 @@ SELECT COUNT(*) FROM wdi_facts;
 
 > Os resultados reais serão preenchidos aqui após a primeira execução.
 
+### Q1
+
+Numero retornado foi 296
+
+### Q2
+
+"High income"	86
+"Aggregates"	79
+"Upper middle income"	54
+"Lower middle income"	50
+"Low income"	25
+"Not classified"	2
+
+### Q3
+
+"SE.XPD.TOTL.GD.ZS"	2660	990
+"NY.GDP.PCAP.KD"	2660	115
+"SP.POP.TOTL"	    2660	10
+"SH.XPD.CHEX.GD.ZS"	2660	474
+"EG.ELC.ACCS.ZS"	2660	30
+
+### Q4
+
+"Brazil"	2015	8936.1956
+"Brazil"	2016	8577.8428
+"Brazil"	2017	8628.2521
+"Brazil"	2018	8722.3353
+"Brazil"	2019	8771.4395
+"Brazil"	2020	8435.0105
+"Brazil"	2021	8799.2284
+"Brazil"	2022	9032.0838
+"Brazil"	2023	9288.0259
+"Brazil"	2024	9566.7441
+"China"	    2015	8175.3329
+"China"	    2016	8679.3770
+"China"	    2017	9221.5140
+"China"	    2018	9798.6529
+"China"	    2019	10356.4804
+"China"	    2020	10573.6420
+"China"	    2021	11469.5707
+"China"	    2022	11830.5984
+"China"	    2023	12484.1579
+"China"	    2024	13121.6770
+"Germany"	2015	41929.7549
+"Germany"	2016	42516.9337
+"Germany"	2017	43543.4807
+"Germany"	2018	43905.8550
+"Germany"	2019	44235.2659
+"Germany"	2020	42372.8727
+"Germany"	2021	44011.0195
+"Germany"	2022	44817.1316
+"Germany"	2023	44368.9920
+"Germany"	2024	44027.7632
+"Nigeria"	2015	2585.7336
+"Nigeria"	2016	2481.8149
+"Nigeria"	2017	2441.7124
+"Nigeria"	2018	2431.7786
+"Nigeria"	2019	2431.5353
+"Nigeria"	2020	2228.6863
+"Nigeria"	2021	2206.6641
+"Nigeria"	2022	2254.2908
+"Nigeria"	2023	2280.9193
+"Nigeria"	2024	2324.6488
+"United States"	2015	56572.9189
+"United States"	2016	57151.4708
+"United States"	2017	58151.7021
+"United States"	2018	59526.6657
+"United States"	2019	60750.9899
+"United States"	2020	59194.6665
+"United States"	2021	62680.2504
+"United States"	2022	63886.1317
+"United States"	2023	65186.5977
+"United States"	2024	66356.1707
+
+### Q5
+
+Antes: 13300
+Depois: 13300
 ---
 
 ## Decisões Técnicas

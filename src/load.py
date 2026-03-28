@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 
-from sqlalchemy import create_engine, Column, String, Numeric, SmallInteger, Text, func
+from sqlalchemy import create_engine, Column, String, Numeric, SmallInteger, Text
 from sqlalchemy.orm import DeclarativeBase, Session
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
@@ -16,8 +16,6 @@ def get_engine():
     )
     return create_engine(url, echo=False, pool_pre_ping=True)
 
-
-# ── Modelos ORM (DeclarativeBase — SQLAlchemy 2.x) ────────────────────────────
 
 class Base(DeclarativeBase):
     pass
@@ -53,7 +51,12 @@ class WdiFact(Base):
     value          = Column(Numeric(18, 4))
 
 
-# ── Upsert em lote ────────────────────────────────────────────────────────────
+
+def ensure_tables(engine):
+    Base.metadata.create_all(engine)
+    print("[load] tabelas verificadas/criadas com sucesso")
+
+
 
 def _upsert(session: Session, model, rows: List[Dict], conflict_cols: List[str], update_cols: List[str]):
     if not rows:
@@ -62,8 +65,7 @@ def _upsert(session: Session, model, rows: List[Dict], conflict_cols: List[str],
 
     stmt = pg_insert(model).values(rows)
     update_set = {col: getattr(stmt.excluded, col) for col in update_cols}
-    update_set["loaded_at"] = func.now()
-
+    
     stmt = stmt.on_conflict_do_update(
         index_elements=conflict_cols,
         set_=update_set,
@@ -105,13 +107,15 @@ def load_data(countries: List[Dict], indicators: List[Dict], facts: List[Dict]) 
 
     engine = get_engine()
 
+    ensure_tables(engine)
+
     try:
         with Session(engine) as session:
-            # Ordem obrigatória: countries → indicators → wdi_facts (FK)
             load_countries(session, countries)
             load_indicators(session, indicators)
             load_facts(session, facts)
 
-        print(f"[load] carga concluída com sucesso")
+        print("[load] carga concluída com sucesso")
     except Exception as exc:
         raise RuntimeError(f"[load] falha na carga: {exc}") from exc
+

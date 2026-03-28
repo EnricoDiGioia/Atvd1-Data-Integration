@@ -2,7 +2,6 @@ from typing import List, Dict, Any, Optional
 from config import settings, INDICATORS
 
 
-# ── Helpers (mesmo padrão do transforme.py da aula) ──────────────────────────
 
 def safe_str(value: Any) -> Optional[str]:
     if value is None:
@@ -29,9 +28,6 @@ def safe_int(value: Any) -> Optional[int]:
         return None
 
 
-# ── T1: Filtro de entidade ────────────────────────────────────────────────────
-# Países reais têm exatamente 2 caracteres no campo id.
-# Agregados regionais (EAS, WLD...) têm 3+ caracteres e são descartados.
 
 def is_real_country(iso2: Optional[str]) -> bool:
     if not iso2:
@@ -46,9 +42,10 @@ def transform_countries(raw: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     skipped = 0
 
     for record in raw:
-        iso2 = safe_str(record.get("id"))
+        iso2 = safe_str(record.get("iso2Code"))
+        iso3 = safe_str(record.get("id"))
 
-        # T1 — descarta agregados regionais
+        # T1 — descarta agregados regionais (iso2Code com len != 2 ou None)
         if not is_real_country(iso2):
             skipped += 1
             continue
@@ -62,7 +59,7 @@ def transform_countries(raw: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         # T3 — conversão de tipos para lat/lon
         row = {
             "iso2_code":    iso2,
-            "iso3_code":    safe_str(record.get("iso2Code")),
+            "iso3_code":    iso3,
             "name":         safe_str(record.get("name")) or "Unknown",
             "region":       region,
             "income_group": income,
