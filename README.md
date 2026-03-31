@@ -258,7 +258,7 @@ etl_worldbank/
 ├── docker-compose.yml
 ├── Dockerfile
 ├── requirements.txt
-├── .env.example
+├── .env
 ├── .gitignore
 ├── README.md
 ├── db/
